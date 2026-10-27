@@ -18,7 +18,7 @@ import shutil
 import tarfile
 import time
 
-from core import REPO
+from core import REPO, UPSTREAM_REPO
 
 LOG = logging.getLogger('screen_manager')
 
@@ -26,6 +26,7 @@ TAG = 'build-cache'
 # The release's asset list; ESP_SCREENS_BUILD_CACHE points elsewhere (a local test) or turns this off ('off', which
 # the GitHub job that makes the caches sets: it has to start from an empty one).
 RELEASE = 'https://api.github.com/repos/' + REPO.removeprefix('https://github.com/') + f'/releases/tags/{TAG}'
+UPSTREAM_RELEASE = 'https://api.github.com/repos/' + UPSTREAM_REPO.removeprefix('https://github.com/') + f'/releases/tags/{TAG}'
 TIME_LIMIT = 300  # seconds for the whole download; past it the build goes on without
 # Recorded per board in the cache folder: which published cache was unpacked, so the same one is not fetched again.
 MARKER = '.esp-screens-build-cache.json'
@@ -94,10 +95,15 @@ async def seed(board, folder, log, env=None, session=None):
             session = aiohttp.ClientSession()
         try:
             async with asyncio.timeout(TIME_LIMIT):
-                async with session.get(source, headers={'Accept': 'application/vnd.github+json'}) as response:
-                    if response.status != 200:
-                        return f'no list ({response.status})'
-                    release = await response.json(content_type=None)
+                release = None
+                for candidate in ((RELEASE, UPSTREAM_RELEASE) if source == RELEASE else (source,)):
+                    async with session.get(candidate, headers={'Accept': 'application/vnd.github+json'}) as response:
+                        if response.status == 200:
+                            release = await response.json(content_type=None)
+                            break
+                        last_status = response.status
+                if release is None:
+                    return f'no list ({last_status})'
                 asset = next((a for a in release.get('assets') or [] if a.get('name') == name), None)
                 if not asset:
                     return f'none for {board} on ESPHome {esphome}'

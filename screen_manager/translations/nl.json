@@ -493,6 +493,16 @@
         "vertical": "Verticaal",
         "horizontal": "Horizontaal"
       },
+      "climate_preset": {
+        "none": "Geen",
+        "eco": "Eco",
+        "away": "Afwezig",
+        "boost": "Boost",
+        "comfort": "Comfortabel",
+        "home": "Thuis",
+        "sleep": "Slaapstand",
+        "activity": "Activiteit"
+      },
       "alarm": {
         "disarmed": "Uitgeschakeld",
         "armed_home": "Ingeschakeld thuis",

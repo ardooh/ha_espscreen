@@ -18,7 +18,7 @@ import atomic
 import build_cache
 import build_memory
 import build_server
-from core import BOARD_KEYS, REF, REPO, SHAPES, channel, hotspot_name, installation_yaml, old_hotspot_name, our_ref, ref
+from core import BOARD_KEYS, KNOWN_REPOS, REF, REPO, SHAPES, UPSTREAM_REPO, channel, hotspot_name, installation_yaml, old_hotspot_name, our_ref, ref
 from i18n import t
 
 LOG = logging.getLogger('screen_manager')
@@ -65,13 +65,13 @@ def profile_meta(text):
             value = substitutions.get(value[2:-1])
         return value if isinstance(value, str) else None
     # 'screen': the profile pulls this project's board package, so it is one of ours (not any ESPHome device).
-    packages = data.get('packages') if isinstance(data.get('packages'), dict) else {}
-    ours = any(isinstance(entry, dict) and REPO in str(entry.get('url', '')) for entry in packages.values())
+    packages = data.get('packages') if isinstance(data, dict) and isinstance(data.get('packages'), dict) else {}
+    ours = any(isinstance(entry, dict) and any(r in str(entry.get('url', '')) for r in KNOWN_REPOS) for entry in packages.values())
     # The board package the profile builds from ("packages/guition.yaml"): what the screen looks like follows
     # from it (core.SHAPES), so the editor draws the right screen before it has ever been flashed.
     package = None
     for entry in packages.values():
-        if isinstance(entry, dict) and REPO in str(entry.get('url', '')):
+        if isinstance(entry, dict) and any(r in str(entry.get('url', '')) for r in KNOWN_REPOS):
             files = entry.get('files')
             first = files[0] if isinstance(files, list) and files else files
             if isinstance(first, str):
@@ -357,7 +357,7 @@ class Firmware:
         written only when this one name is the one thing that changed. True when it changed."""
         profile = self.profile(name)
         raw = profile.read_bytes().decode('utf-8')
-        if 'homeassistant_espscreen' not in raw and 'packages/core.yaml' not in raw:
+        if not any(r.rsplit('/', 1)[-1] in raw for r in KNOWN_REPOS) and 'packages/core.yaml' not in raw:
             return False
         newline = '\r\n' if '\r\n' in raw else '\n'
         text = raw.replace('\r\n', '\n')
@@ -442,11 +442,25 @@ class Firmware:
         text = raw.replace('\r\n', '\n')
         before = yaml.load(text, Loader=LenientLoader)
         packages = before.get('packages') if isinstance(before, dict) else None
-        ours = [key for key, entry in packages.items() if isinstance(entry, dict) and REPO in str(entry.get('url', ''))] \
+        ours = [key for key, entry in packages.items()
+                if isinstance(entry, dict) and any(r in str(entry.get('url', '')) for r in KNOWN_REPOS)] \
             if isinstance(packages, dict) else []
         if not ours or any(not our_ref(packages[key].get('ref')) for key in ours):
             return False
         changed = False
+        url_line = re.compile(rf'(?m)^([ \t]+url:[ \t]*)(["\']?)({re.escape(UPSTREAM_REPO)}(?:\.git)?)\2([ \t]*(?:#.*)?)$')
+        for key in ours:
+            old_url = str(packages[key].get('url', ''))
+            if UPSTREAM_REPO not in old_url:
+                continue
+            new_url = old_url.replace(UPSTREAM_REPO, REPO, 1)
+            expected = deepcopy(before)
+            expected['packages'][key]['url'] = new_url
+            for match in url_line.finditer(text):
+                candidate = text[:match.start(3)] + new_url + text[match.end(3):]
+                if yaml.load(candidate, Loader=LenientLoader) == expected:
+                    text, before, packages, changed = candidate, expected, expected['packages'], True
+                    break
         line = re.compile(r'(?m)^([ \t]+ref:[ \t]*)(["\']?)(main|dev|screens-v\d+\.\d+\.\d+)\2([ \t]*(?:#.*)?)$')
         for key in ours:
             if packages[key]['ref'] == branch:

@@ -1,3 +1,10 @@
+## 0.4.91 (firmware 0.58.0)
+
+- **Preset mode buttons on climate tiles and cards** ([#314](https://github.com/MaxGramser/homeassistant_espscreen/issues/314)).
+  Thermostats with a single active HVAC mode and preset modes (`eco`, `comfort`, `boost`, `away`, `home`, `sleep`,
+  `activity` or custom integration presets) now show their preset modes on the tile's mode bar and on the climate card's
+  mode keys, and thermostats with multiple HVAC modes show their presets as a row on the climate card.
+
 ## 0.4.90 (firmware 0.57.1 for waveshare43, waveshare5)
 
 - **The Waveshare 4.3-inch and 5-inch update again with ESPHome 2026.10.** ESPHome 2026.10.0 checks more closely
