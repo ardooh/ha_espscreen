@@ -99,7 +99,9 @@ FULL_PAGE_MIN_FIRMWARE = (0, 2, 62)
 # Twenty tiles from firmware 0.2.7, ten before.
 TWENTY_TILES_MIN_FIRMWARE = (0, 2, 7)
 FIRST_MAX_TILES = 10
-REPO = 'https://github.com/MaxGramser/homeassistant_espscreen'
+REPO = 'https://github.com/ardooh/ha_espscreen'
+UPSTREAM_REPO = 'https://github.com/MaxGramser/homeassistant_espscreen'
+KNOWN_REPOS = (REPO, UPSTREAM_REPO)
 # The branch a screen's YAML builds its board package from. Which boards there are is boards.json's (BOARD_KEYS).
 REF = 'main'
 # The app's channel (docs/RELEASING.md, "Testing dev"): the branch of this repository the app was added from. The
@@ -109,7 +111,7 @@ REF = 'main'
 # spelling of the URL) has no channel: new screens build from main, existing ones keep the `ref:` they have. Without a
 # Supervisor (Docker, docs/DOCKER.md) SCREEN_CHANNEL names it, which the image GitHub builds from dev carries
 # (.github/workflows/docker.yml); unset, there is none.
-CHANNELS = {'ec8ae0ed': 'main', 'fa6a7b50': 'dev'}
+CHANNELS = {'ec8ae0ed': 'main', 'fa6a7b50': 'dev', '404a49d5': 'main', 'cce1fd2f': 'dev'}
 CHANNEL = None
 
 def channel_of(slug):
@@ -170,7 +172,7 @@ def our_ref(value):
 # The shared firmware of this app release: packages/core.yaml's SCREEN_FIRMWARE_VERSION, what every board builds
 # unless its own board file went ahead with a fix for that board alone (firmware_target, docs/BOARD_RELEASES.md). The
 # middle number is the core: the feature gates below name a shared X.Y.0, so a feature always ships with a new core.
-FIRMWARE_VERSION = '0.59.0'
+FIRMWARE_VERSION = '0.59.1'
 # The Auto standby switch a screen offers Home Assistant automations.
 AUTO_STANDBY_MIN_FIRMWARE = '0.2.41'
 # The settings page the screen opens itself, and the screen.settings tile that opens it.
@@ -207,6 +209,9 @@ ATTRS = frozenset('brightness percentage current_position current_tilt_position 
 # and what it is doing. Other domains use the same names for other things (an automation's `mode`), so only a humidifier
 # sends them.
 HUMIDIFIER_ATTRS = frozenset('min_humidity max_humidity target_humidity_step available_modes mode action'.split())
+# A thermostat's preset modes and current preset (ClimateEntityFeature.PRESET_MODE): scoped to climate entities so fans
+# or lights using the same attribute names do not carry extra state bytes.
+CLIMATE_ATTRS = frozenset(('preset_mode', 'preset_modes'))
 # What the weather card of a screen that draws the week shows beside the temperature, as Home Assistant's more-info
 # dialog does (its hello says weather_week): the wind's bearing, the air pressure, the visibility, and the unit of the
 # rain. Only to such a screen; an older one keeps its message as it was.
@@ -2651,7 +2656,8 @@ def state_message(index, tile, states, extra=None, precision=None, entry=None, u
     state = states.get(tile['entity'], {})
     attrs = state.get('attributes', {})
     bounded = {}
-    keys = ATTRS | HUMIDIFIER_ATTRS if tile['entity'].startswith('humidifier.') else ATTRS
+    keys = (ATTRS | HUMIDIFIER_ATTRS if tile['entity'].startswith('humidifier.')
+            else ATTRS | CLIMATE_ATTRS if tile['entity'].startswith('climate.') else ATTRS)
     if week and tile['entity'].startswith('weather.'):
         keys = keys | WEATHER_WEEK_ATTRS
     for key in keys:

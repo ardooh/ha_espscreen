@@ -1,3 +1,10 @@
+## 0.4.94 (firmware 0.59.1)
+
+- **Preset mode buttons on climate tiles and cards** ([#314](https://github.com/MaxGramser/homeassistant_espscreen/issues/314)).
+  Thermostats with a single active HVAC mode and preset modes (`eco`, `comfort`, `boost`, `away`, `home`, `sleep`,
+  `activity` or custom integration presets) now show their preset modes on the tile's mode bar and on the climate card's
+  mode keys, excluding the `none` preset. Thermostats with multiple HVAC modes show their presets as a row on the climate card.
+
 ## 0.4.93 (firmware 0.59.0)
 
 - **A camera opens full screen at once again from its live tile.** Since 0.4.91 a tap on a live tile took about 11 seconds to show the camera full screen: its first try went out without an address while the tile's own stream was still ending, and the second came 10 seconds later.
