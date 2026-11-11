@@ -356,7 +356,7 @@
    "microphone",
    "media_player"
   ],
-  "firmware": "0.59.0",
+  "firmware": "0.60.0",
   "fonts": {
    "headline": 21,
    "icon": 33,
@@ -4407,7 +4407,7 @@
    "microphone",
    "media_player"
   ],
-  "firmware": "0.59.0",
+  "firmware": "0.60.0",
   "fonts": {
    "headline": 21,
    "icon": 33,
@@ -6251,7 +6251,7 @@
    "microphone",
    "media_player"
   ],
-  "firmware": "0.59.0",
+  "firmware": "0.60.0",
   "fonts": {
    "headline": 21,
    "icon": 33,
