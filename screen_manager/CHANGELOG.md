@@ -1,7 +1,8 @@
 ## Unreleased
 
+- **A new board: the Espressif ESP32-S3-BOX-3**, a 2.4-inch ESP32-S3 board with 320 x 240 glass, GT911 touch, a dimmable backlight and 16 MB PSRAM, with its speaker and microphones (experimental): a media player in Home Assistant, and ready for the voice assistant plugin.
+- **A wake word keeps listening after a question on a board whose microphone and speaker take turns.** The voice assistant stopped the microphone at the end of a question, under the wake word, which then never heard its word again until a restart. While a plugin holds the microphone it now runs whenever the speaker is quiet. Seen on an ESP32-S3-BOX-3. Choose it under New screen, as Espressif.
 - **Preset mode buttons on climate tiles and cards** ([#314](https://github.com/MaxGramser/homeassistant_espscreen/issues/314)). Thermostats with a single active HVAC mode (such as heating only) and preset modes in Home Assistant (`eco`, `comfort`, `boost`, `away`, `home`, `sleep`, `activity` or custom presets) now show their preset modes directly on the tile's mode bar and on the climate card's mode keys, excluding the `none` preset. Thermostats with multiple HVAC modes show their presets as a row on the climate card.
-
 - **Tessera is looking for funding.** The home overview asks for it, before the support card, with a button that mails Max: a day job comes first, and Tessera needs funding to stay alive. "Not now" puts it away for a week.
 
 ## 0.4.97 (firmware 0.60.0)
