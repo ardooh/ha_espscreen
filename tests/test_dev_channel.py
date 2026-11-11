@@ -65,6 +65,13 @@ class Channel(unittest.TestCase):
         self.assertEqual(hashlib.sha1((url + '#dev').lower().encode()).hexdigest()[:8], 'fa6a7b50')
         self.assertEqual(channel_of('ec8ae0ed_esp_screen_manager'), 'main')
         self.assertEqual(channel_of('fa6a7b50_esp_screen_manager'), 'dev')
+        fork = 'https://github.com/ardooh/ha_espscreen'
+        self.assertEqual(hashlib.sha1(fork.lower().encode()).hexdigest()[:8], '404a49d5')
+        self.assertEqual(hashlib.sha1((fork + '#dev').lower().encode()).hexdigest()[:8], 'cce1fd2f')
+        self.assertEqual(hashlib.sha1((fork + '#feature/esp32-s3-box-3').lower().encode()).hexdigest()[:8], '22bdbbca')
+        self.assertEqual(channel_of('404a49d5_esp_screen_manager'), 'main')
+        self.assertEqual(channel_of('cce1fd2f_esp_screen_manager'), 'dev')
+        self.assertEqual(channel_of('22bdbbca_esp_screen_manager'), 'feature/esp32-s3-box-3')
         for slug in ('local_esp_screen_manager', '1234abcd_esp_screen_manager', 'esp_screen_manager', '', None):
             with self.subTest(slug):
                 self.assertIsNone(channel_of(slug))
@@ -183,6 +190,12 @@ class Branch(unittest.TestCase):
         bridge = load((Path(self.tmp.name) / self.firmware.bridge(path.name)).read_text())
         self.assertEqual(bridge['packages']['bridge']['ref'], 'dev')
         self.assertEqual(bridge['substitutions']['GITHUB_REF'], 'dev')
+
+    def test_an_upstream_profile_migrates_to_this_fork(self):
+        upstream = SCREEN.replace(REPO, core.UPSTREAM_REPO)
+        path = self.write(upstream, 'kitchen.yaml')
+        self.assertTrue(self.firmware.set_branch(path.name, 'main'))
+        self.assertEqual(path.read_text(), SCREEN)
 
 
 class Release(unittest.TestCase):
