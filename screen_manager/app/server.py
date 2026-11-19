@@ -4542,6 +4542,13 @@ def create_app(manager, development=False):
             screen.update(firmware_features(version, manager.grid_of(screen)))
             # The memory it has for its tiles and what each costs (firmware 0.34.0+): the editor shows how full it is.
             screen['memory'] = manager.memory(screen['id'])
+            # Whether this screen has PSRAM (e.g. ESP32-S3-BOX-3 has 16 MB PSRAM without features/camera.yaml).
+            screen['psram'] = bool(
+                (screen.get('memory') or {}).get('psram')
+                or ((screen.get('caps') or {}).get('psram_kb') or 0) > 0
+                or SHAPES.get(board_of(screen), {}).get('psram')
+                or screen['pictures']
+            )
             # The items a page's top bar takes (firmware 0.34.0+ says more on a board with room): the editor's limit.
             screen['bar_limit'] = manager.grid_of(screen).bar_items
             # Does it work as you expect (app 0.3.10): only for a board the website knows, and never the key.

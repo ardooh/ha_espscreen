@@ -1225,8 +1225,16 @@ class Plugins:
         # A screen that had such a plugin before its board brought the feature leaves it out of its build (sidecar).
         if set(manifest['provides']) & set(core.SHAPES.get(core.board_of(screen), {}).get('features') or []):
             return 'built_in'
-        # PSRAM: a board that draws camera pictures has it (features/camera.yaml is for PSRAM boards only).
-        if manifest['requires']['psram'] and not screen.get('pictures') and not core.SHAPES.get(core.board_of(screen), {}).get('camera'):
+        # PSRAM: reported by the screen (memory/caps), declared by its board in boards.json, or implied by camera pictures.
+        has_psram = bool(
+            screen.get('psram')
+            or (screen.get('memory') or {}).get('psram')
+            or ((screen.get('caps') or {}).get('psram_kb') or 0) > 0
+            or screen.get('pictures')
+            or core.SHAPES.get(core.board_of(screen), {}).get('psram')
+            or core.SHAPES.get(core.board_of(screen), {}).get('camera')
+        )
+        if manifest['requires']['psram'] and not has_psram:
             return 'psram'
         if self.blocked(entry):
             return 'blocked'

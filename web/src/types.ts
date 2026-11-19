@@ -318,6 +318,8 @@ export type Screen = {
   orientation?: Orientation;
   // Whether its board draws pictures: camera tiles, an alert's snapshot, an album cover (app 0.2.94).
   pictures?: boolean;
+  // Whether this screen's board has PSRAM (boards such as ESP32-S3-BOX-3 have PSRAM without camera pictures).
+  psram?: boolean;
   // Plugins (design): the size of its last firmware image and its update slot, from the add-on's last build of it.
   firmware_image?: { size: number; slot: number } | null;
   // Whether it has a battery the top bar can show (app 0.4.68, firmware 0.41.0): its hello said so, or its board has one.

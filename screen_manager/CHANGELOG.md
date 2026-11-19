@@ -1,3 +1,7 @@
+## 0.4.99 (firmware 0.60.0)
+
+- **Plugins requiring PSRAM (such as Voice assistant) now install on PSRAM boards without camera pictures**, including the **Espressif ESP32-S3-BOX-3** (which has 16 MB PSRAM without `features/camera.yaml`).
+
 ## 0.4.98 (firmware 0.60.0)
 
 - **A new board: the Espressif ESP32-S3-BOX-3**, a 2.4-inch ESP32-S3 board with 320 x 240 glass, GT911 touch, a dimmable backlight and 16 MB PSRAM, with its speaker and microphones (experimental): a media player in Home Assistant, and ready for the voice assistant plugin.
