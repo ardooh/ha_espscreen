@@ -148,6 +148,11 @@ def battery(board):
     return any(re.search(r'^\s+device_class: battery\s*$', path.read_text(), re.M) for path in chain(BOARDS[board]))
 
 
+def psram(board):
+    """Whether a board has PSRAM (a top-level `psram:` block in any of its files), independent of features/camera.yaml."""
+    return any(re.search(r'(?m)^psram:', path.read_text()) for path in chain(BOARDS[board]))
+
+
 def features(board):
     """What a screen of this board brings that a plugin may need (plugin API 0.8, plugin_manifest.FEATURES): each a
     component under its promised id in one of its files, `ts_speaker`, `ts_microphone`, `ts_media_player` (the board's

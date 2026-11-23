@@ -421,7 +421,8 @@ export function fit(plugin: Plugin, screen: Screen | null, known: Record<string,
   if (plugin.blocked) return { ok: false, reason: "blocked" };
   if (plugin.fits_api === false) return { ok: false, reason: "firmware" };
   if (plugin.boards !== "any" && !(screen.board && plugin.boards.includes(screen.board))) return { ok: false, reason: "board" };
-  if (plugin.requires.psram && !screen.pictures) return { ok: false, reason: "psram" };
+  const hasPsram = Boolean(screen.psram || screen.memory?.psram || (screen.caps?.psram_kb ?? 0) > 0 || screen.pictures);
+  if (plugin.requires.psram && !hasPsram) return { ok: false, reason: "psram" };
   const reason = known[plugin.id];
   if (reason) return { ok: false, reason };
   if (smallFlash(screen) && plugin.flash_kb > headroomKb(screen)) return { ok: false, reason: "flash" };

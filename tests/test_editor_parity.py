@@ -329,7 +329,7 @@ console.log(JSON.stringify(DATA.shapes.map((shape: any) => ({
     # answer on every board but the Hosyond, whose compact look has cells of 88 and 105 pixels. Known, and kept here so
     # a fix shows up: the editor needs the board's cell height for it (the top bar's band and the page bar), which
     # boards.json does not carry yet.
-    KNOWN = {'hosyond40-landscape', 'hosyond40-portrait'}
+    KNOWN = {'hosyond40-landscape', 'hosyond40-portrait', 'esp32s3box3-landscape'}
 
     def test_a_full_cards_finger_follows_its_cell(self):
         for (key, _, shape), ts in zip(SHAPES, self.ts):

@@ -74,6 +74,8 @@ describe("plugins", () => {
     const needsPsram = plugin({ requires: { psram: true } });
     expect(fit(needsPsram, screen("cyd"))).toEqual({ ok: false, reason: "psram" });
     expect(fit(needsPsram, screen("guition"))).toEqual({ ok: true });
+    expect(fit(needsPsram, screen("esp32s3box3", { pictures: false, psram: true }))).toEqual({ ok: true });
+    expect(fit(needsPsram, screen("esp32s3box3", { pictures: false, memory: { room: 10000, used: 0, psram: true, tile: 0, extra: 0 } }))).toEqual({ ok: true });
   });
 
   it("asks for newer firmware when the add-on says the plugin's API is newer than its own", () => {
