@@ -1,2 +1,2 @@
 // Generated. Do not edit; regenerate with web/wasm/build.sh.
-#define ESP_SCREEN_FIRMWARE_RENDERER_SOURCE_SHA256 "984625d96c7f1c848d0374eddba3bdde69baae0a8b6edd6ee82c82ae25c5e6ab"
+#define ESP_SCREEN_FIRMWARE_RENDERER_SOURCE_SHA256 "e176404e9461a51044f3d287de7eb9b390ef0a4e24db4d3e0873080aa1107137"
