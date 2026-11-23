@@ -1,6 +1,8 @@
 ## 0.4.101 (firmware 0.63.0)
 
 - **The full editor fits a phone.** With the full editor on a phone, the page stood wider than the phone, and in the Home Assistant app on an iPhone the whole editor was then drawn smaller, with large empty spaces and cards out of shape. The page now takes the phone's width, the tabs of a screen scroll sideways when they do not fit, and the zoom keys stay away where the page already fills the width.
+- **Climate preset modes (fork).** Single-mode thermostats with `preset_modes` (such as Versatile Thermostat) display preset mode buttons on tiles and detail cards (with the `none` preset excluded), and multi-mode thermostats gain a preset row on the detail card (#314).
+- **Espressif ESP32-S3-BOX-3 with speaker and microphones (fork).** Full support for the 2.4-inch ESP32-S3-BOX-3 (GT911 touch, 16 MB PSRAM, duplex ES8311/ES7210 audio), plus PSRAM detection for plugins (such as Voice assistant) on PSRAM boards without camera pictures.
 
 ## 0.4.100 (firmware 0.63.0)
 
