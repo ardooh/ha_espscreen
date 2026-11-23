@@ -1,3 +1,7 @@
+## 0.4.103 (firmware 0.65.0)
+
+- **Fix `esp32s3box3` firmware link error (include `esphome/core/defines.h` in `http_get.cpp`).** `USE_MICROPHONE` and `USE_LIVE_VIEW` come from ESPHome's generated `defines.h`, so `http_get.cpp` now includes it before evaluating its `#if` guard.
+
 ## 0.4.102 (firmware 0.64.0)
 
 - **Fix `esp32s3box3` firmware link error.** Compile `http_get.cpp` whenever the talk uplink (`USE_MICROPHONE && USE_LIVE_VIEW`) is enabled, not only when `SCREEN_PICTURES` is enabled, so PSRAM boards with a microphone and without `features/camera.yaml` (such as the Espressif ESP32-S3-BOX-3) link cleanly on ESPHome 2026.6.2 and 2026.9.0.

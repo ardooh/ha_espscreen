@@ -2,6 +2,9 @@
 // Compiled with the pictures (SCREEN_PICTURES, packages/features/camera.yaml) or the talk uplink
 // (USE_MICROPHONE && USE_LIVE_VIEW, talk_uplink.cpp); a 4 MB board without either pays nothing.
 #include "http_get.h"
+#if __has_include("esphome/core/defines.h")
+#include "esphome/core/defines.h"
+#endif
 #if defined(SCREEN_PICTURES) || (defined(USE_MICROPHONE) && defined(USE_LIVE_VIEW))
 #include <cerrno>
 #include <arpa/inet.h>
