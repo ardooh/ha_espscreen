@@ -1,3 +1,7 @@
+## 0.4.102 (firmware 0.64.0)
+
+- **Fix `esp32s3box3` firmware link error.** Compile `http_get.cpp` whenever the talk uplink (`USE_MICROPHONE && USE_LIVE_VIEW`) is enabled, not only when `SCREEN_PICTURES` is enabled, so PSRAM boards with a microphone and without `features/camera.yaml` (such as the Espressif ESP32-S3-BOX-3) link cleanly on ESPHome 2026.6.2 and 2026.9.0.
+
 ## 0.4.101 (firmware 0.63.0)
 
 - **The full editor fits a phone.** With the full editor on a phone, the page stood wider than the phone, and in the Home Assistant app on an iPhone the whole editor was then drawn smaller, with large empty spaces and cards out of shape. The page now takes the phone's width, the tabs of a screen scroll sideways when they do not fit, and the zoom keys stay away where the page already fills the width.

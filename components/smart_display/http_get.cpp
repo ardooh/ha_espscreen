@@ -1,8 +1,8 @@
 // The socket of http_get.h: what every download of the screen from ESP Screen Manager opens (docs/SCREEN_FILES.md).
-// Compiled with the pictures (SCREEN_PICTURES, packages/features/camera.yaml), as everything that downloads is; a 4 MB
-// board without them pays nothing.
+// Compiled with the pictures (SCREEN_PICTURES, packages/features/camera.yaml) or the talk uplink
+// (USE_MICROPHONE && USE_LIVE_VIEW, talk_uplink.cpp); a 4 MB board without either pays nothing.
 #include "http_get.h"
-#ifdef SCREEN_PICTURES
+#if defined(SCREEN_PICTURES) || (defined(USE_MICROPHONE) && defined(USE_LIVE_VIEW))
 #include <cerrno>
 #include <arpa/inet.h>
 #include <fcntl.h>
