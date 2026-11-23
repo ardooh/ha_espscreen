@@ -316,7 +316,7 @@
   "climate": {
    "firmware": null,
    "memory": {
-    "bytes": 304,
+    "bytes": 384,
     "extras": true
    },
    "key": true,
@@ -431,6 +431,9 @@
       "actions": [
        {
         "action": "climate.set_hvac_mode"
+       },
+       {
+        "action": "climate.set_preset_mode"
        }
       ]
      }

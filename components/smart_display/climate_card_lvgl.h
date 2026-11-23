@@ -198,7 +198,7 @@ inline void climate_limit_paint(lv_obj_t *key,const Tile &t,const CardPart &part
 // A mode key (value: its mode), in Home Assistant's colour for its mode while it is the one in use.
 inline void climate_mode_paint(lv_obj_t *key,const Tile &t,const CardPart &part){
   const bool selected=!tile_controls::climate_off(t)&&part.value==tile_controls::current_mode(t);
-  const uint32_t colour=tile_controls::humidifier(t)?tile_controls::accent(t):tile_controls::mode_color(part.value);
+  const uint32_t colour=(tile_controls::humidifier(t)||tile_controls::climate_uses_presets(t))?tile_controls::accent(t):tile_controls::mode_color(part.value);
   set_color(key,LV_STYLE_BG_COLOR,selected?lv_color_hex(colour):theme::color(theme::CARD));
   set_number(key,LV_STYLE_BORDER_WIDTH,selected?0:1);
   if(auto *glyph=lv_obj_get_child(key,0))set_color(glyph,LV_STYLE_TEXT_COLOR,theme::color(selected?theme::ON_ACCENT:theme::SLATE));

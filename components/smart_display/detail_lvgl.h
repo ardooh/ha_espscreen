@@ -269,7 +269,7 @@ inline bool alarm_keypad_first(const Tile &t);
 // a thermostat's rows and the power keys.
 inline bool wish_command(int cmd){
   return cmd==20||cmd==23||cmd==25||cmd==26||(cmd>=SELECT_OPTION_FIRST&&cmd<SELECT_OPTION_FIRST+64)||
-         (cmd>=CLIMATE_MODE_FIRST&&cmd<CLIMATE_ROW_FIRST+12)||cmd==CLIMATE_POWER||cmd==LIGHT_POWER;
+         (cmd>=CLIMATE_MODE_FIRST&&cmd<CLIMATE_ROW_FIRST+18)||cmd==CLIMATE_POWER||cmd==LIGHT_POWER;
 }
 inline void detail_command(int cmd){
   // Back on the alarm's keypad goes back to its card; everywhere else it closes the card.
@@ -368,19 +368,21 @@ inline void detail_command(int cmd){
   if(cmd>=70 && cmd<130){if(t.domain()=="cover")cover_key(t,cmd-70);}
   if(cmd==40)action(t.state=="active"?"timer.pause":"timer.start",t.entity);
   if(cmd==41)action("timer.cancel",t.entity);
-  // The climate card: a mode (200-207), a fan or swing choice (210-221) and the power key (230). The card
+  // The climate card: a mode (200-207), a preset, fan or swing choice (210-227) and the power key (230). The card
   // shows the choice at once and waits for Home Assistant, like the vacuum card's chips.
   if(cmd>=CLIMATE_MODE_FIRST&&cmd<CLIMATE_MODE_FIRST+8){
     const auto modes=tile_controls::climate_modes(t);
     const unsigned i=cmd-CLIMATE_MODE_FIRST;
     if(i<modes.size()&&tile_controls::humidifier(t)&&modes[i]!=t.extra().humidifier_mode){
       wish(t,optimistic::Field::HUMIDIFIER_MODE,modes[i],"humidifier.set_mode","mode",modes[i]);
-    }else if(i<modes.size()&&!tile_controls::humidifier(t)&&modes[i]!=tile_controls::lower_case(t.state)){
+    }else if(i<modes.size()&&tile_controls::climate_uses_presets(t)&&modes[i]!=t.extra().preset_mode){
+      wish(t,optimistic::Field::PRESET_MODE,modes[i],"climate.set_preset_mode","preset_mode",modes[i]);
+    }else if(i<modes.size()&&!tile_controls::humidifier(t)&&!tile_controls::climate_uses_presets(t)&&modes[i]!=tile_controls::lower_case(t.state)){
       climate_mode_wish(t,modes[i]);
     }
     return;
   }
-  if(cmd>=CLIMATE_ROW_FIRST&&cmd<CLIMATE_ROW_FIRST+12){
+  if(cmd>=CLIMATE_ROW_FIRST&&cmd<CLIMATE_ROW_FIRST+18){
     const auto rows=tile_controls::climate_rows(t);
     const unsigned r=(cmd-CLIMATE_ROW_FIRST)/6,i=(cmd-CLIMATE_ROW_FIRST)%6;
     if(r<rows.size()&&i<rows[r].values.size()&&rows[r].values[i]!=rows[r].current){
@@ -388,7 +390,7 @@ inline void detail_command(int cmd){
       const std::string value=rows[r].values[i];
       const auto a=tile_controls::climate_row_action(kind,value);
       using F=optimistic::Field;
-      wish(t,kind=='m'?F::HUMIDIFIER_MODE:kind=='f'?F::FAN_MODE:F::SWING_MODE,value,a.service,a.key,a.value);
+      wish(t,kind=='m'?F::HUMIDIFIER_MODE:kind=='p'?F::PRESET_MODE:kind=='f'?F::FAN_MODE:F::SWING_MODE,value,a.service,a.key,a.value);
     }
     return;
   }

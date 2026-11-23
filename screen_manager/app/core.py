@@ -210,6 +210,9 @@ ATTRS = frozenset('brightness percentage current_position current_tilt_position 
 # and what it is doing. Other domains use the same names for other things (an automation's `mode`), so only a humidifier
 # sends them.
 HUMIDIFIER_ATTRS = frozenset('min_humidity max_humidity target_humidity_step available_modes mode action'.split())
+# A thermostat's preset modes and current preset (ClimateEntityFeature.PRESET_MODE): scoped to climate entities so fans
+# or lights using the same attribute names do not carry extra state bytes.
+CLIMATE_ATTRS = frozenset(('preset_mode', 'preset_modes'))
 # A text's (text, input_text, firmware 0.61.0, docs/TEXT_ENTITY.md): password or text. Its min and max are in ATTRS;
 # its pattern stays here, as Home Assistant checks it when the screen sends a value.
 TEXT_ATTRS = frozenset(['mode'])
@@ -2684,7 +2687,9 @@ def state_message(index, tile, states, extra=None, precision=None, entry=None, u
     state = states.get(tile['entity'], {})
     attrs = state.get('attributes', {})
     bounded = {}
-    keys = ATTRS | HUMIDIFIER_ATTRS if tile['entity'].startswith('humidifier.') else ATTRS | TEXT_ATTRS if tile['entity'].startswith(TEXT_DOMAINS) else ATTRS
+    keys = (ATTRS | HUMIDIFIER_ATTRS if tile['entity'].startswith('humidifier.')
+            else ATTRS | CLIMATE_ATTRS if tile['entity'].startswith('climate.')
+            else ATTRS | TEXT_ATTRS if tile['entity'].startswith(TEXT_DOMAINS) else ATTRS)
     if week and tile['entity'].startswith('weather.'):
         keys = keys | WEATHER_WEEK_ATTRS
     for key in keys:

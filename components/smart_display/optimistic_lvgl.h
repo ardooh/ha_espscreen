@@ -92,6 +92,7 @@ inline std::string wish_read(const Tile &t, optimistic::Field field, const std::
     case F::HUMIDIFIER_MODE: return x.humidifier_mode;
     case F::FAN_MODE: return x.fan_mode;
     case F::SWING_MODE: return x.swing_mode;
+    case F::PRESET_MODE: return x.preset_mode;
     case F::ACTIVITY: return t.state == "on" ? x.activity : std::string();  // empty: the remote is off
     case F::PLAYING: return media_card::playing(t.state) ? "1" : "0";
     case F::SHUFFLE: return x.media_shuffle < 0 ? std::string() : x.media_shuffle ? "1" : "0";
@@ -134,6 +135,7 @@ inline void wish_write(Tile &t, optimistic::Field field, const std::string &valu
     case F::HUMIDIFIER_MODE: t.edit_extra().humidifier_mode = value; break;
     case F::FAN_MODE: t.edit_extra().fan_mode = value; break;
     case F::SWING_MODE: t.edit_extra().swing_mode = value; break;
+    case F::PRESET_MODE: t.edit_extra().preset_mode = value; break;
     case F::ACTIVITY:
       if (value.empty()) t.state = "off";
       else { t.edit_extra().activity = value; t.state = "on"; }
