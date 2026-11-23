@@ -172,7 +172,7 @@ class TheCandidate(unittest.TestCase):
                 self.assertIn(f'GITHUB_REF: "{release.CANDIDATE}"', text)
                 self.assertIn('ref: ${GITHUB_REF}', text)
         cyd, _ = release.pointed_at((ROOT / 'packages/cyd.yaml').read_text(), release.CANDIDATE)
-        self.assertIn('homeassistant_espscreen/${GITHUB_REF}/fonts', cyd)
+        self.assertIn('ardooh/ha_espscreen/${GITHUB_REF}/fonts', cyd)
 
     def test_nothing_else_in_the_packages_fetches_from_main(self):
         """The candidate only rewrites the published entries: any other package that named main would build main's."""

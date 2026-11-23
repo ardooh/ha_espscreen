@@ -126,6 +126,7 @@ A wish writes its value into the tile and paints every tile and the open card of
 | `HUMIDIFIER_MODE` | the mode | the humidifier's `mode` attribute |
 | `FAN_MODE` | the fan mode | a thermostat's `fan_mode` |
 | `SWING_MODE` | the swing mode | a thermostat's `swing_mode` |
+| `PRESET_MODE` | the preset mode | a thermostat's `preset_mode` |
 | `ACTIVITY` | the activity, empty for off | a remote's activity and its state |
 | `PLAYING` | `1`, `0` | a player's state (`playing` or `paused`); the progress bar stops or runs on from where it is |
 | `SHUFFLE` | `1`, `0` | a player's shuffle |
